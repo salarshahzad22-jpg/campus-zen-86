@@ -66,16 +66,20 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Campus Helper AI — Study Smarter" },
+      { title: "Campus Helper AI — Your student command center" },
       {
         name: "description",
         content:
-          "Manage assignments, attendance, exams and study plans with an AI helper built for university students.",
+          "Track assignments, attendance and exams, save study resources, and get AI-generated study plans in one place.",
       },
-      { property: "og:title", content: "Campus Helper AI" },
-      { property: "og:description", content: "One dashboard for assignments, attendance, exams, resources and an AI study assistant." },
+      { property: "og:title", content: "Campus Helper AI — Your student command center" },
+      { property: "og:description", content: "Track assignments, attendance and exams, save study resources, and get AI-generated study plans in one place." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Campus Helper AI — Your student command center" },
+      { name: "twitter:description", content: "Track assignments, attendance and exams, save study resources, and get AI-generated study plans in one place." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/08da9619-fb6e-4129-9f2d-8f92ae84a460/id-preview-f0c9b24d--1a933675-20a8-4c2e-9fd5-f91545a5a938.lovable.app-1784952945722.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/08da9619-fb6e-4129-9f2d-8f92ae84a460/id-preview-f0c9b24d--1a933675-20a8-4c2e-9fd5-f91545a5a938.lovable.app-1784952945722.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
