@@ -107,8 +107,19 @@ function AIAssistant() {
         <div className="space-y-4">
           {plan ? (
             <Card className="border-primary/30">
-              <CardHeader>
+              <CardHeader className="flex-row items-center justify-between space-y-0">
                 <CardTitle className="flex items-center gap-2"><Target className="h-5 w-5 text-accent" /> Your goal</CardTitle>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => {
+                    const text = `Goal: ${plan.goal}\n\nAction plan:\n${plan.action_plan.map((s, i) => `${i + 1}. ${s}`).join("\n")}\n\nDaily checklist:\n${plan.daily_checklist.map((c) => `- ${c}`).join("\n")}\n\nRevision tips:\n${plan.revision_tips.map((t) => `- ${t}`).join("\n")}`;
+                    navigator.clipboard.writeText(text);
+                    toast.success("Copied to clipboard");
+                  }}
+                >
+                  <Copy className="mr-2 h-3.5 w-3.5" /> Copy
+                </Button>
               </CardHeader>
               <CardContent className="space-y-5">
                 <p className="text-lg font-medium">{plan.goal}</p>
