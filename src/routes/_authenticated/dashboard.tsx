@@ -98,6 +98,35 @@ function Dashboard() {
         </CardContent>
       </Card>
 
+      <div className="mt-6">
+        <h3 className="mb-3 text-sm font-semibold text-muted-foreground uppercase tracking-wide">Quick actions</h3>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {[
+            { to: "/assignments", label: "Add assignment", icon: ClipboardList, desc: "Track new work" },
+            { to: "/exams", label: "Add exam", icon: GraduationCap, desc: "Plan your prep" },
+            { to: "/attendance", label: "Log attendance", icon: CalendarCheck, desc: "Keep your record up" },
+            { to: "/resources", label: "Save resource", icon: BookOpen, desc: "Notes, links, files" },
+            { to: "/ai-assistant", label: "Study planner", icon: Bot, desc: "AI-generated plan" },
+            { to: "/ask-ai", label: "Ask Campus AI", icon: Bot, desc: "Chat with AI" },
+          ].map((q) => (
+            <Link key={q.label} to={q.to}>
+              <Card className="h-full hover:shadow-md hover:border-primary/40 transition-all">
+                <CardContent className="flex items-center gap-3 p-4">
+                  <div className="grid h-10 w-10 place-items-center rounded-lg bg-primary/10 text-primary">
+                    <q.icon className="h-5 w-5" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="font-medium truncate">{q.label}</p>
+                    <p className="text-xs text-muted-foreground truncate">{q.desc}</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+          ))}
+        </div>
+      </div>
+
+
       <div className="mt-6 grid gap-6 lg:grid-cols-2">
         <Card>
           <CardHeader className="flex-row items-center justify-between">
