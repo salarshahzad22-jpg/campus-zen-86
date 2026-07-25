@@ -27,6 +27,8 @@ function ResourcesPage() {
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState(empty);
   const [search, setSearch] = useState("");
+  const [typeFilter, setTypeFilter] = useState<string>("all");
+
 
   const { data = [] } = useQuery({
     queryKey: ["resources"],
@@ -68,9 +70,14 @@ function ResourcesPage() {
   });
 
   const filtered = useMemo(
-    () => data.filter((r) => [r.title, r.subject ?? "", r.content ?? ""].join(" ").toLowerCase().includes(search.toLowerCase())),
-    [data, search]
+    () => data.filter((r) => {
+      const matchesText = [r.title, r.subject ?? "", r.content ?? ""].join(" ").toLowerCase().includes(search.toLowerCase());
+      const matchesType = typeFilter === "all" || r.type === typeFilter;
+      return matchesText && matchesType;
+    }),
+    [data, search, typeFilter]
   );
+
 
   return (
     <div>
@@ -123,10 +130,22 @@ function ResourcesPage() {
         }
       />
 
-      <div className="relative mb-4 max-w-md">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <Input placeholder="Search resources…" className="pl-9" value={search} onChange={(e) => setSearch(e.target.value)} />
+      <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:max-w-2xl">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input placeholder="Search resources…" className="pl-9" value={search} onChange={(e) => setSearch(e.target.value)} />
+        </div>
+        <Select value={typeFilter} onValueChange={setTypeFilter}>
+          <SelectTrigger className="sm:w-48"><SelectValue /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All categories</SelectItem>
+            <SelectItem value="note">Notes</SelectItem>
+            <SelectItem value="link">Links</SelectItem>
+            <SelectItem value="file">Files / PDFs</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
+
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {filtered.length === 0 && (
