@@ -1,6 +1,7 @@
 import { ReactNode, useState } from "react";
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
 import {
+  Bot,
   BookOpen,
   Brain,
   CalendarCheck,
@@ -23,7 +24,8 @@ const NAV = [
   { to: "/attendance", label: "Attendance", icon: CalendarCheck },
   { to: "/exams", label: "Exams", icon: GraduationCap },
   { to: "/resources", label: "Resources", icon: BookOpen },
-  { to: "/ai-assistant", label: "AI Assistant", icon: Brain },
+  { to: "/ask-ai", label: "Ask Campus AI", icon: Bot },
+  { to: "/ai-assistant", label: "Study Planner", icon: Brain },
   { to: "/settings", label: "Settings", icon: SettingsIcon },
 ] as const;
 
