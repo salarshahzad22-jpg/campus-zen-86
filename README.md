@@ -1,7 +1,7 @@
 # Campus Helper AI
 
 ## 1. Project Overview
-
+ok
 Campus Helper AI is an AI-powered student productivity and academic management web application designed to help university and college students manage their academic life in one place.
 
 Students often have to manage assignments, attendance, exams, study materials, and academic planning across different platforms and notebooks. Campus Helper AI brings these essential activities together into one centralized and user-friendly platform.
