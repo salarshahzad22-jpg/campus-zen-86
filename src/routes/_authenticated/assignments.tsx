@@ -85,11 +85,16 @@ function AssignmentsPage() {
     },
   });
 
+  const subjects = useMemo(() => Array.from(new Set(data.map((a) => a.subject))).sort(), [data]);
+
   const filtered = useMemo(
-    () => data.filter((a) =>
-      [a.title, a.subject, a.description ?? ""].join(" ").toLowerCase().includes(search.toLowerCase())
-    ),
-    [data, search]
+    () => data.filter((a) => {
+      const matchesSearch = [a.title, a.subject, a.description ?? ""].join(" ").toLowerCase().includes(search.toLowerCase());
+      const matchesSubject = subjectFilter === "all" || a.subject === subjectFilter;
+      const matchesStatus = statusFilter === "all" || a.status === statusFilter;
+      return matchesSearch && matchesSubject && matchesStatus;
+    }),
+    [data, search, subjectFilter, statusFilter]
   );
 
   function openEdit(a: Assignment) {
