@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Brain, CheckCircle2, ListChecks, Sparkles, Target, History } from "lucide-react";
+import { Brain, CheckCircle2, ListChecks, Sparkles, Target, History, Copy } from "lucide-react";
 import { toast } from "sonner";
 import { generateStudyPlan, type StudyPlan } from "@/lib/ai-study.functions";
 import { format } from "date-fns";
@@ -107,8 +107,19 @@ function AIAssistant() {
         <div className="space-y-4">
           {plan ? (
             <Card className="border-primary/30">
-              <CardHeader>
+              <CardHeader className="flex-row items-center justify-between space-y-0">
                 <CardTitle className="flex items-center gap-2"><Target className="h-5 w-5 text-accent" /> Your goal</CardTitle>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => {
+                    const text = `Goal: ${plan.goal}\n\nAction plan:\n${plan.action_plan.map((s, i) => `${i + 1}. ${s}`).join("\n")}\n\nDaily checklist:\n${plan.daily_checklist.map((c) => `- ${c}`).join("\n")}\n\nRevision tips:\n${plan.revision_tips.map((t) => `- ${t}`).join("\n")}`;
+                    navigator.clipboard.writeText(text);
+                    toast.success("Copied to clipboard");
+                  }}
+                >
+                  <Copy className="mr-2 h-3.5 w-3.5" /> Copy
+                </Button>
               </CardHeader>
               <CardContent className="space-y-5">
                 <p className="text-lg font-medium">{plan.goal}</p>

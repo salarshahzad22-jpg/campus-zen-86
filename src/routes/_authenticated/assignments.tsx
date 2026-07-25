@@ -37,6 +37,8 @@ const empty = { title: "", subject: "", due_date: "", priority: "medium", status
 function AssignmentsPage() {
   const qc = useQueryClient();
   const [search, setSearch] = useState("");
+  const [subjectFilter, setSubjectFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<Assignment | null>(null);
   const [form, setForm] = useState(empty);
@@ -83,11 +85,16 @@ function AssignmentsPage() {
     },
   });
 
+  const subjects = useMemo(() => Array.from(new Set(data.map((a) => a.subject))).sort(), [data]);
+
   const filtered = useMemo(
-    () => data.filter((a) =>
-      [a.title, a.subject, a.description ?? ""].join(" ").toLowerCase().includes(search.toLowerCase())
-    ),
-    [data, search]
+    () => data.filter((a) => {
+      const matchesSearch = [a.title, a.subject, a.description ?? ""].join(" ").toLowerCase().includes(search.toLowerCase());
+      const matchesSubject = subjectFilter === "all" || a.subject === subjectFilter;
+      const matchesStatus = statusFilter === "all" || a.status === statusFilter;
+      return matchesSearch && matchesSubject && matchesStatus;
+    }),
+    [data, search, subjectFilter, statusFilter]
   );
 
   function openEdit(a: Assignment) {
@@ -169,9 +176,27 @@ function AssignmentsPage() {
         }
       />
 
-      <div className="relative mb-4 max-w-md">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <Input placeholder="Search assignments…" className="pl-9" value={search} onChange={(e) => setSearch(e.target.value)} />
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center">
+        <div className="relative flex-1 max-w-md">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input placeholder="Search assignments…" className="pl-9" value={search} onChange={(e) => setSearch(e.target.value)} />
+        </div>
+        <Select value={subjectFilter} onValueChange={setSubjectFilter}>
+          <SelectTrigger className="sm:w-44"><SelectValue placeholder="Subject" /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All subjects</SelectItem>
+            {subjects.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+          </SelectContent>
+        </Select>
+        <Select value={statusFilter} onValueChange={setStatusFilter}>
+          <SelectTrigger className="sm:w-40"><SelectValue placeholder="Status" /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All statuses</SelectItem>
+            <SelectItem value="pending">Pending</SelectItem>
+            <SelectItem value="in_progress">In progress</SelectItem>
+            <SelectItem value="done">Done</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       <div className="grid gap-3">
