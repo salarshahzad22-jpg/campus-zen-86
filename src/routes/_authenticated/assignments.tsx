@@ -37,6 +37,8 @@ const empty = { title: "", subject: "", due_date: "", priority: "medium", status
 function AssignmentsPage() {
   const qc = useQueryClient();
   const [search, setSearch] = useState("");
+  const [subjectFilter, setSubjectFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<Assignment | null>(null);
   const [form, setForm] = useState(empty);
