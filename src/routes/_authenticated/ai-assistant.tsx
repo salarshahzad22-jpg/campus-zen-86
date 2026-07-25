@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Brain, CheckCircle2, ListChecks, Sparkles, Target, History } from "lucide-react";
+import { Brain, CheckCircle2, ListChecks, Sparkles, Target, History, Copy } from "lucide-react";
 import { toast } from "sonner";
 import { generateStudyPlan, type StudyPlan } from "@/lib/ai-study.functions";
 import { format } from "date-fns";
