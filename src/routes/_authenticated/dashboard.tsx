@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { PageHeader } from "@/components/page-header";
 import { format, isPast, differenceInDays } from "date-fns";
-import { ClipboardList, GraduationCap, CalendarCheck, BookOpen, ArrowRight } from "lucide-react";
+import { ClipboardList, GraduationCap, CalendarCheck, BookOpen, ArrowRight, Bot } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
@@ -78,6 +78,25 @@ function Dashboard() {
           </Link>
         ))}
       </div>
+
+      <Card className="mt-6 overflow-hidden border-primary/30 bg-gradient-to-br from-primary/10 via-background to-accent/10">
+        <CardContent className="flex flex-col items-start justify-between gap-4 p-6 md:flex-row md:items-center">
+          <div className="flex items-start gap-4">
+            <div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-primary text-primary-foreground shadow-sm">
+              <Bot className="h-6 w-6" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold">Ask Campus AI</h3>
+              <p className="text-sm text-muted-foreground">
+                Chat with your AI study buddy about assignments, exams, and campus life.
+              </p>
+            </div>
+          </div>
+          <Button asChild size="lg" className="w-full md:w-auto">
+            <Link to="/ask-ai">Open AI Assistant <ArrowRight className="ml-2 h-4 w-4" /></Link>
+          </Button>
+        </CardContent>
+      </Card>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-2">
         <Card>
