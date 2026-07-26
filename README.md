@@ -256,7 +256,7 @@ The application is publicly deployed and its source code is available in a publi
 
 ## Project Links
 
-- **Live Demo:** https://campus-zen-86.vercel.app/
+- **Live Demo:** https://campus-zen-86.lovable.app/
 - **GitHub Repository:** https://github.com/salarshahzad22-jpg/campus-zen-86
 - ## Screenshots
 
