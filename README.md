@@ -156,7 +156,7 @@ The application has been deployed publicly using Vercel.
 
 ### Live Demo
 
-https://campus-zen-86.vercel.app/
+https://campus-zen-86.lovable.app/
 
 The live application can be accessed through the link above.
 
