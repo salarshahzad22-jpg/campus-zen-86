@@ -259,9 +259,55 @@ The application is publicly deployed and its source code is available in a publi
 - **Live Demo:** https://campus-zen-86.lovable.app/
 - **GitHub Repository:** https://github.com/salarshahzad22-jpg/campus-zen-86
 - ## Screenshots
+# 📸 Application Screenshots
 
+## 🔐 Login Screen
+
+![Login Screen](1000180096.jpg)
+
+The login page provides secure authentication for students. Users can sign in using their Google account or email and password to access all Campus Helper AI features.
+
+---
+
+## 🏠 Dashboard
+
+![Dashboard](1000180097.jpg)
+
+The dashboard gives students a quick overview of their academic activities, including pending assignments, upcoming exams, attendance percentage, and saved study resources. It serves as the central hub of the application.
+
+---
+
+## 🤖 AI Chat Assistant
+
+![AI Chat Assistant](1000180098.jpg)
+
+The AI Chat Assistant allows students to ask questions related to assignments, exams, courses, and campus life. It provides instant AI-powered responses to support students anytime.
+
+---
 ### Login Page
 ![Login Page](docs/screenshot-login.jpg)
+# 👨‍💻 Author
+
+## Muhammad Shahzad
+
+**BS Computer Science Student**
+
+**Project:** Campus Helper AI
+
+### Contact Information
+
+- **GitHub:** https://github.com/salarshahzad22-jpg
+- **Repository:** https://github.com/salarshahzad22-jpg/campus-zen-86
+
+---
+
+### About the Author
+
+Muhammad Shahzad is a Bachelor of Computer Science student with a strong interest in Artificial Intelligence, Web Development, and modern software technologies. This project was developed as part of an AI course to demonstrate practical skills in building intelligent, responsive, and user-friendly web applications using modern development tools.
+
+---
+
+⭐ Thank you for visiting this project. If you found it useful, please consider giving it a star on GitHub.
 
 ### Dashboard
 ![Dashboard](docs/screenshot-dashboard.jpg)
