@@ -14,6 +14,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { supabase } from "@/integrations/supabase/client";
 import { Toaster } from "@/components/ui/sonner";
 import { initTheme } from "@/lib/theme";
+import { registerServiceWorker } from "@/lib/register-sw";
 
 
 function NotFoundComponent() {
@@ -80,10 +81,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:description", content: "Track assignments, attendance and exams, save study resources, and get AI-generated study plans in one place." },
       { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/08da9619-fb6e-4129-9f2d-8f92ae84a460/id-preview-f0c9b24d--1a933675-20a8-4c2e-9fd5-f91545a5a938.lovable.app-1784952945722.png" },
       { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/08da9619-fb6e-4129-9f2d-8f92ae84a460/id-preview-f0c9b24d--1a933675-20a8-4c2e-9fd5-f91545a5a938.lovable.app-1784952945722.png" },
+      { name: "theme-color", content: "#6D28D9" },
+      { name: "apple-mobile-web-app-capable", content: "yes" },
+      { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
+      { name: "apple-mobile-web-app-title", content: "CampusZen" },
+      { name: "mobile-web-app-capable", content: "yes" },
+      { name: "application-name", content: "Campus Zen" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "icon", href: "/favicon.png", type: "image/png" },
+      { rel: "apple-touch-icon", href: "/apple-touch-icon.png", sizes: "180x180" },
+      { rel: "manifest", href: "/manifest.webmanifest" },
     ],
   }),
   shellComponent: RootShell,
@@ -112,6 +121,7 @@ function RootComponent() {
 
   useEffect(() => {
     initTheme();
+    registerServiceWorker();
     const { data: sub } = supabase.auth.onAuthStateChange((event) => {
       if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED") return;
       router.invalidate();
