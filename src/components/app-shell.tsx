@@ -29,11 +29,16 @@ const NAV = [
   { to: "/settings", label: "Settings", icon: SettingsIcon },
 ] as const;
 
+const ADMIN_NAV = { to: "/admin", label: "Admin panel", icon: ShieldCheck } as const;
+
 export function AppShell({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const qc = useQueryClient();
+  const { isAdmin } = useIsAdmin();
+  const navItems = isAdmin ? [...NAV, ADMIN_NAV] : [...NAV];
+
 
   async function signOut() {
     await qc.cancelQueries();
