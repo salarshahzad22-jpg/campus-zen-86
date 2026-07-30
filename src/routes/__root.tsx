@@ -15,6 +15,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Toaster } from "@/components/ui/sonner";
 import { initTheme } from "@/lib/theme";
 import { registerServiceWorker } from "@/lib/register-sw";
+import { enforceSessionPolicy } from "@/lib/session";
 
 
 function NotFoundComponent() {
@@ -122,6 +123,7 @@ function RootComponent() {
   useEffect(() => {
     initTheme();
     registerServiceWorker();
+    void enforceSessionPolicy();
     const { data: sub } = supabase.auth.onAuthStateChange((event) => {
       if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED") return;
       router.invalidate();
