@@ -7,6 +7,7 @@ import { PageHeader } from "@/components/page-header";
 import { format, isPast, differenceInDays } from "date-fns";
 import { ClipboardList, GraduationCap, CalendarCheck, BookOpen, ArrowRight, Bot } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useProfile, firstNameFrom } from "@/hooks/use-profile";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({ meta: [{ title: "Dashboard — Campus Helper AI" }] }),
@@ -14,6 +15,8 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 });
 
 function Dashboard() {
+  const { data: profile } = useProfile();
+  const firstName = firstNameFrom(profile?.full_name ?? "", profile?.email ?? "");
   const { data } = useQuery({
     queryKey: ["dashboard"],
     queryFn: async () => {
@@ -57,7 +60,7 @@ function Dashboard() {
   return (
     <div>
       <PageHeader
-        title="Welcome back 👋"
+        title={`Welcome back, ${firstName} 👋`}
         description="Here's what's coming up. Stay on top of your semester."
       />
 

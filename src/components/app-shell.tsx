@@ -11,12 +11,14 @@ import {
   LogOut,
   Menu,
   Settings as SettingsIcon,
+  ShieldCheck,
   X,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useQueryClient } from "@tanstack/react-query";
+import { useIsAdmin } from "@/hooks/use-profile";
 
 const NAV = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -29,11 +31,16 @@ const NAV = [
   { to: "/settings", label: "Settings", icon: SettingsIcon },
 ] as const;
 
+const ADMIN_NAV = { to: "/admin", label: "Admin panel", icon: ShieldCheck } as const;
+
 export function AppShell({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const qc = useQueryClient();
+  const { isAdmin } = useIsAdmin();
+  const navItems = isAdmin ? [...NAV, ADMIN_NAV] : [...NAV];
+
 
   async function signOut() {
     await qc.cancelQueries();
@@ -74,7 +81,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             Campus Helper AI
           </div>
           <nav className="p-3 space-y-1 mt-2 lg:mt-0">
-            {NAV.map((item) => {
+            {navItems.map((item) => {
               const active = currentPath.startsWith(item.to);
               return (
                 <Link
