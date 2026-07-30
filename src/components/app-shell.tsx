@@ -81,7 +81,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             Campus Helper AI
           </div>
           <nav className="p-3 space-y-1 mt-2 lg:mt-0">
-            {NAV.map((item) => {
+            {navItems.map((item) => {
               const active = currentPath.startsWith(item.to);
               return (
                 <Link
