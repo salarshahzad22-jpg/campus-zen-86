@@ -14,6 +14,8 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 });
 
 function Dashboard() {
+  const { data: profile } = useProfile();
+  const firstName = firstNameFrom(profile?.full_name ?? "", profile?.email ?? "");
   const { data } = useQuery({
     queryKey: ["dashboard"],
     queryFn: async () => {
