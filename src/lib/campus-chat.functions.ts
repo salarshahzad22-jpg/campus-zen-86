@@ -6,9 +6,6 @@ const SendSchema = z.object({
   message: z.string().trim().min(1).max(4000),
 });
 
-const SYSTEM_PROMPT = `You are Campus AI, a friendly and practical assistant for university students.
-Help with studies, assignments, exams, time management, and campus life.
-Keep answers concise, encouraging, and actionable. Use short paragraphs and bullet points when helpful.`;
 
 export const sendCampusChatMessage = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
