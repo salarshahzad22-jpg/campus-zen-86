@@ -57,7 +57,7 @@ function Dashboard() {
   return (
     <div>
       <PageHeader
-        title="Welcome back 👋"
+        title={`Welcome back, ${firstName} 👋`}
         description="Here's what's coming up. Stay on top of your semester."
       />
 
