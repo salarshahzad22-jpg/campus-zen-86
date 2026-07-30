@@ -9,7 +9,7 @@ export class GeminiConfigError extends Error {}
 export class GeminiRequestError extends Error {}
 
 /** Reusable Gemini service. Reads GEMINI_API_KEY at call time (never at module scope). */
-export function getGeminiModel(modelName = "gemini-2.0-flash") {
+export function getGeminiModel(modelName = "gemini-flash-latest") {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
     throw new GeminiConfigError(
