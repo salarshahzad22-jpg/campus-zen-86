@@ -7,6 +7,7 @@ import { PageHeader } from "@/components/page-header";
 import { format, isPast, differenceInDays } from "date-fns";
 import { ClipboardList, GraduationCap, CalendarCheck, BookOpen, ArrowRight, Bot } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useProfile, firstNameFrom } from "@/hooks/use-profile";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({ meta: [{ title: "Dashboard — Campus Helper AI" }] }),
