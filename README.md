@@ -118,7 +118,55 @@ The project was developed using modern web development and cloud technologies.
 - Supabase
 
 ### AI and Application Development
+- Google Gemini (`@google/generative-ai` official SDK)
 - Lovable
+
+---
+
+## 7a. AI Integration (Google Gemini)
+
+Campus Zen AI is powered by the **official Google Gemini SDK** (`@google/generative-ai`).
+
+### How it works
+- `src/lib/gemini.server.ts` — reusable, server-only Gemini service. It builds the
+  client, applies the system prompt, maps chat history to Gemini turns, and
+  normalizes configuration / rate-limit / request errors.
+- `src/lib/campus-chat.functions.ts` — authenticated server function that persists
+  the user message, loads the last 20 turns for context, calls the Gemini service,
+  and stores the assistant reply.
+- `src/routes/_authenticated/ask-ai.tsx` — chat UI with loading animation
+  (typing dots), success rendering, and error toasts.
+
+### System prompt
+```
+You are Campus Zen AI, a helpful university assistant. Help students with
+assignments, attendance, exams, study plans, campus information, productivity,
+and university guidance.
+```
+
+### Environment variables
+
+| Variable | Where | Purpose |
+| --- | --- | --- |
+| `GEMINI_API_KEY` | server only | Google Gemini API key (never hardcoded, never exposed to the browser) |
+| `VITE_SUPABASE_URL` | client | Backend project URL |
+| `VITE_SUPABASE_PUBLISHABLE_KEY` | client | Public backend key |
+
+### Setup
+
+1. Create an API key at https://aistudio.google.com/app/apikey
+2. Add it as a server secret named `GEMINI_API_KEY` (in Lovable: project settings → secrets;
+   locally: add `GEMINI_API_KEY=...` to your `.env`).
+3. Install dependencies and run:
+   ```bash
+   bun install
+   bun run dev
+   ```
+4. Open the app, sign in, and use **Ask Campus AI**.
+
+The key is read at request time inside the server handler only — it is never
+bundled into client code.
+
 
 ### Deployment
 - Vercel
