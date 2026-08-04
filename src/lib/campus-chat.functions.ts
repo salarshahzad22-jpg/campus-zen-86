@@ -58,3 +58,21 @@ export const clearCampusChat = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
+const FavoriteSchema = z.object({
+  id: z.string().uuid(),
+  is_favorite: z.boolean(),
+});
+
+export const toggleChatFavorite = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: unknown) => FavoriteSchema.parse(data))
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase
+      .from("chat_messages")
+      .update({ is_favorite: data.is_favorite })
+      .eq("id", data.id)
+      .eq("user_id", context.userId);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });

@@ -1,51 +1,102 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
 import { PageHeader } from "@/components/page-header";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
-import { Bot, Send, Trash2, User as UserIcon, Loader2 } from "lucide-react";
+import {
+  Bot,
+  Send,
+  Trash2,
+  User as UserIcon,
+  Loader2,
+  Mic,
+  MicOff,
+  Copy,
+  Check,
+  Share2,
+  Star,
+  Sparkle,
+} from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-import { sendCampusChatMessage, clearCampusChat } from "@/lib/campus-chat.functions";
+import {
+  sendCampusChatMessage,
+  clearCampusChat,
+  toggleChatFavorite,
+} from "@/lib/campus-chat.functions";
+import { MarkdownMessage } from "@/components/chat/markdown-message";
+import { useVoiceInput } from "@/hooks/use-voice-input";
+import "highlight.js/styles/github-dark.css";
 
 export const Route = createFileRoute("/_authenticated/ask-ai")({
   head: () => ({
     meta: [
       { title: "Ask Campus AI — Chat with your study assistant" },
-      { name: "description", content: "Chat with Campus AI about studies, assignments, exams, and campus life." },
+      {
+        name: "description",
+        content:
+          "Chat with Campus AI about studies, assignments, exams, and campus life. Voice input, markdown answers, and saved favorites.",
+      },
+      { property: "og:title", content: "Ask Campus AI — Chat with your study assistant" },
+      {
+        property: "og:description",
+        content: "Voice-enabled AI study assistant for assignments, exams, and campus life.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Ask Campus AI" },
+      {
+        name: "twitter:description",
+        content: "Voice-enabled AI study assistant for assignments, exams, and campus life.",
+      },
     ],
   }),
   component: AskAI,
 });
 
-type ChatRow = { id: string; role: "user" | "assistant"; content: string; created_at: string };
-
-const WELCOME: ChatRow = {
-  id: "welcome",
-  role: "assistant",
-  content:
-    "Hi! I'm Campus AI. Ask me anything about your studies, assignments, exams, or campus life.",
-  created_at: "",
+type ChatRow = {
+  id: string;
+  role: "user" | "assistant";
+  content: string;
+  created_at: string;
+  is_favorite: boolean;
 };
+
+const WELCOME =
+  "Hi! I'm **Campus AI** — ask me anything about your studies, assignments, exams, or campus life.";
+
+const SUGGESTIONS = [
+  "Make me a 7-day revision plan for my next exam",
+  "Summarise the key points of photosynthesis",
+  "How do I stay consistent with attendance?",
+  "Explain Big-O notation with a code example",
+];
 
 function AskAI() {
   const qc = useQueryClient();
   const send = useServerFn(sendCampusChatMessage);
   const clear = useServerFn(clearCampusChat);
+  const favorite = useServerFn(toggleChatFavorite);
   const [input, setInput] = useState("");
+  const [onlyFavorites, setOnlyFavorites] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  const voice = useVoiceInput((text) => setInput(text));
+  useEffect(() => {
+    if (voice.error) toast.error(voice.error);
+  }, [voice.error]);
 
   const { data: messages = [], isLoading } = useQuery({
     queryKey: ["chat_messages"],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("chat_messages")
-        .select("id, role, content, created_at")
+        .select("id, role, content, created_at, is_favorite")
         .order("created_at", { ascending: true });
       if (error) throw error;
       return data as ChatRow[];
@@ -62,6 +113,7 @@ function AskAI() {
         role: "user",
         content: message,
         created_at: new Date().toISOString(),
+        is_favorite: false,
       };
       qc.setQueryData<ChatRow[]>(["chat_messages"], [...prev, optimistic]);
       return { prev };
@@ -82,49 +134,110 @@ function AskAI() {
     onError: (e: Error) => toast.error(e.message),
   });
 
-  const displayed: ChatRow[] = messages.length > 0 ? messages : [WELCOME];
+  const favMut = useMutation({
+    mutationFn: async (v: { id: string; is_favorite: boolean }) => favorite({ data: v }),
+    onMutate: async (v) => {
+      await qc.cancelQueries({ queryKey: ["chat_messages"] });
+      const prev = qc.getQueryData<ChatRow[]>(["chat_messages"]) ?? [];
+      qc.setQueryData<ChatRow[]>(
+        ["chat_messages"],
+        prev.map((m) => (m.id === v.id ? { ...m, is_favorite: v.is_favorite } : m)),
+      );
+      return { prev };
+    },
+    onError: (e: Error, _v, ctx) => {
+      if (ctx?.prev) qc.setQueryData(["chat_messages"], ctx.prev);
+      toast.error(e.message);
+    },
+    onSettled: () => qc.invalidateQueries({ queryKey: ["chat_messages"] }),
+  });
+
+  const favoriteCount = messages.filter((m) => m.is_favorite).length;
+  const displayed = useMemo(
+    () => (onlyFavorites ? messages.filter((m) => m.is_favorite) : messages),
+    [messages, onlyFavorites],
+  );
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
-  }, [messages, sendMut.isPending]);
+  }, [displayed, sendMut.isPending]);
 
   useEffect(() => {
-    inputRef.current?.focus();
+    if (!sendMut.isPending) inputRef.current?.focus();
   }, [sendMut.isPending]);
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    const text = input.trim();
-    if (!text || sendMut.isPending) return;
+  function submit(text: string) {
+    const value = text.trim();
+    if (!value || sendMut.isPending) return;
     setInput("");
-    sendMut.mutate(text);
+    if (voice.listening) voice.stop();
+    setOnlyFavorites(false);
+    sendMut.mutate(value);
   }
 
   return (
-    <div className="flex h-[calc(100vh-8rem)] flex-col">
-      <div className="flex items-start justify-between gap-4">
+    <div className="flex h-[calc(100dvh-8rem)] flex-col">
+      <div className="flex flex-wrap items-start justify-between gap-3">
         <PageHeader
           title="Ask Campus AI"
           description="Your always-on study buddy — ask about assignments, exams, or campus life."
         />
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => clearMut.mutate()}
-          disabled={clearMut.isPending || messages.length === 0}
-        >
-          <Trash2 className="mr-2 h-4 w-4" /> Clear chat
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            variant={onlyFavorites ? "default" : "outline"}
+            size="sm"
+            onClick={() => setOnlyFavorites((v) => !v)}
+            disabled={favoriteCount === 0 && !onlyFavorites}
+          >
+            <Star className={cn("mr-2 h-4 w-4", onlyFavorites && "fill-current")} />
+            Favorites{favoriteCount > 0 ? ` (${favoriteCount})` : ""}
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => clearMut.mutate()}
+            disabled={clearMut.isPending || messages.length === 0}
+          >
+            <Trash2 className="mr-2 h-4 w-4" /> Clear chat
+          </Button>
+        </div>
       </div>
 
-      <Card className="flex flex-1 min-h-0 flex-col overflow-hidden">
-        <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4">
+      <Card className="flex min-h-0 flex-1 flex-col overflow-hidden">
+        <div ref={scrollRef} className="flex-1 space-y-4 overflow-y-auto p-4 md:p-6">
           {isLoading ? (
             <div className="flex items-center justify-center py-8 text-muted-foreground">
               <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Loading chat…
             </div>
+          ) : displayed.length === 0 && onlyFavorites ? (
+            <p className="py-8 text-center text-sm text-muted-foreground">
+              No saved answers yet — tap the star on a reply to keep it here.
+            </p>
           ) : (
-            displayed.map((m) => <MessageBubble key={m.id} message={m} />)
+            <>
+              {messages.length === 0 && (
+                <MessageBubble
+                  message={{
+                    id: "welcome",
+                    role: "assistant",
+                    content: WELCOME,
+                    created_at: "",
+                    is_favorite: false,
+                  }}
+                />
+              )}
+              {displayed.map((m) => (
+                <MessageBubble
+                  key={m.id}
+                  message={m}
+                  onToggleFavorite={
+                    m.id.startsWith("optimistic")
+                      ? undefined
+                      : () => favMut.mutate({ id: m.id, is_favorite: !m.is_favorite })
+                  }
+                />
+              ))}
+            </>
           )}
           {sendMut.isPending && (
             <div className="flex gap-3">
@@ -136,17 +249,60 @@ function AskAI() {
           )}
         </div>
 
-        <form onSubmit={handleSubmit} className="border-t bg-background p-3 md:p-4">
-          <div className="flex gap-2">
-            <Input
+        {messages.length === 0 && !isLoading && (
+          <div className="flex flex-wrap gap-2 border-t px-4 pt-3 md:px-6">
+            {SUGGESTIONS.map((s) => (
+              <button
+                key={s}
+                type="button"
+                onClick={() => submit(s)}
+                className="rounded-full border border-primary/30 bg-primary/5 px-3 py-1.5 text-xs text-foreground transition-colors hover:bg-primary/10"
+              >
+                <Sparkle className="mr-1 inline h-3 w-3 text-primary" />
+                {s}
+              </button>
+            ))}
+          </div>
+        )}
+
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            submit(input);
+          }}
+          className="bg-background p-3 md:p-4"
+        >
+          <div className="flex items-end gap-2">
+            <Textarea
               ref={inputRef}
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask Campus AI anything…"
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  submit(input);
+                }
+              }}
+              placeholder={voice.listening ? "Listening…" : "Ask Campus AI anything…"}
               disabled={sendMut.isPending}
               maxLength={4000}
+              rows={1}
+              className="max-h-40 min-h-[2.75rem] resize-none"
               autoFocus
             />
+            {voice.supported && (
+              <Button
+                type="button"
+                variant={voice.listening ? "default" : "outline"}
+                size="icon"
+                aria-label={voice.listening ? "Stop voice input" : "Start voice input"}
+                onClick={() => (voice.listening ? voice.stop() : voice.start())}
+                disabled={sendMut.isPending}
+                className={cn(voice.listening && "animate-pulse")}
+              >
+                {voice.listening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+              </Button>
+            )}
             <Button type="submit" disabled={!input.trim() || sendMut.isPending}>
               {sendMut.isPending ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -178,20 +334,81 @@ function Avatar({ role }: { role: "user" | "assistant" }) {
   );
 }
 
-function MessageBubble({ message }: { message: ChatRow }) {
+function MessageBubble({
+  message,
+  onToggleFavorite,
+}: {
+  message: ChatRow;
+  onToggleFavorite?: () => void;
+}) {
   const isUser = message.role === "user";
+  const [copied, setCopied] = useState(false);
+
+  async function copy() {
+    await navigator.clipboard.writeText(message.content);
+    setCopied(true);
+    toast.success("Copied to clipboard");
+    setTimeout(() => setCopied(false), 1500);
+  }
+
+  async function share() {
+    const nav = navigator as Navigator & { share?: (d: ShareData) => Promise<void> };
+    if (nav.share) {
+      try {
+        await nav.share({ title: "Campus AI", text: message.content });
+        return;
+      } catch {
+        return;
+      }
+    }
+    await copy();
+  }
+
   return (
-    <div className={cn("flex gap-3", isUser && "flex-row-reverse")}>
+    <div
+      className={cn(
+        "group flex animate-in gap-3 fade-in slide-in-from-bottom-2 duration-300",
+        isUser && "flex-row-reverse",
+      )}
+    >
       <Avatar role={message.role} />
-      <div
-        className={cn(
-          "max-w-[85%] whitespace-pre-wrap rounded-2xl px-4 py-3 text-sm leading-relaxed",
-          isUser
-            ? "rounded-tr-sm bg-primary text-primary-foreground"
-            : "rounded-tl-sm bg-muted text-foreground",
+      <div className={cn("flex max-w-[85%] flex-col gap-1", isUser && "items-end")}>
+        <div
+          className={cn(
+            "rounded-2xl px-4 py-3",
+            isUser
+              ? "whitespace-pre-wrap rounded-tr-sm bg-primary text-sm leading-relaxed text-primary-foreground"
+              : "rounded-tl-sm bg-muted text-foreground",
+          )}
+        >
+          {isUser ? message.content : <MarkdownMessage content={message.content} />}
+        </div>
+        {!isUser && (
+          <div className="flex gap-1 opacity-0 transition-opacity focus-within:opacity-100 group-hover:opacity-100">
+            <Button variant="ghost" size="sm" className="h-7 px-2" onClick={() => void copy()}>
+              {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+            </Button>
+            <Button variant="ghost" size="sm" className="h-7 px-2" onClick={() => void share()}>
+              <Share2 className="h-3.5 w-3.5" />
+            </Button>
+            {onToggleFavorite && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-7 px-2"
+                aria-label={message.is_favorite ? "Remove from favorites" : "Save to favorites"}
+                onClick={onToggleFavorite}
+              >
+                <Star
+                  className={cn(
+                    "h-3.5 w-3.5",
+                    message.is_favorite && "fill-primary text-primary",
+                  )}
+                />
+              </Button>
+            )}
+          </div>
         )}
-      >
-        {message.content}
       </div>
     </div>
   );
