@@ -12,15 +12,37 @@ const SetRoleSchema = z.object({
 
 const DeleteUserSchema = z.object({ userId: z.string().uuid() });
 
-type AdminContext = { supabase: { rpc: (fn: "has_role", args: Record<string, unknown>) => Promise<{ data: unknown }> }; userId: string };
+type AdminContext = {
+  supabase: {
+    from: (table: "user_roles") => {
+      select: (cols: string) => {
+        eq: (
+          col: string,
+          val: string,
+        ) => {
+          eq: (col: string, val: string) => { maybeSingle: () => Promise<{ data: unknown }> };
+        };
+      };
+    };
+  };
+  userId: string;
+};
 
+/**
+ * Verifies the caller is an admin using their own RLS-scoped client.
+ * Reads the role row directly ("users read own roles" policy) — the privileged
+ * role helper lives in a private schema and is not callable from the API.
+ */
 async function assertAdmin(context: AdminContext) {
-  const { data } = await context.supabase.rpc("has_role", {
-    _user_id: context.userId,
-    _role: "admin",
-  });
-  if (data !== true) throw new Error("Forbidden — admin access required.");
+  const { data } = await context.supabase
+    .from("user_roles")
+    .select("role")
+    .eq("user_id", context.userId)
+    .eq("role", "admin")
+    .maybeSingle();
+  if (!data) throw new Error("Forbidden — admin access required.");
 }
+
 
 export const listAdminUsers = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
