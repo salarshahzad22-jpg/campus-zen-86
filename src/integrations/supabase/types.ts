@@ -151,6 +151,7 @@ export type Database = {
           content: string
           created_at: string
           id: string
+          is_favorite: boolean
           role: string
           user_id: string
         }
@@ -158,6 +159,7 @@ export type Database = {
           content: string
           created_at?: string
           id?: string
+          is_favorite?: boolean
           role: string
           user_id: string
         }
@@ -165,6 +167,7 @@ export type Database = {
           content?: string
           created_at?: string
           id?: string
+          is_favorite?: boolean
           role?: string
           user_id?: string
         }
