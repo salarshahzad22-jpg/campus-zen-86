@@ -62,6 +62,8 @@ function SettingsPage() {
   const [avatarPath, setAvatarPath] = useState("");
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [removing, setRemoving] = useState(false);
+
   const [dark, setDark] = useState(false);
   const [notifications, setNotifications] = useState(true);
   const [newPassword, setNewPassword] = useState("");
@@ -152,6 +154,27 @@ function SettingsPage() {
     }
   }
 
+  async function removeAvatar() {
+    if (!profile) return;
+    setRemoving(true);
+    try {
+      const { error } = await supabase.from("profiles").upsert({ id: profile.id, avatar_url: null });
+      if (error) throw error;
+      if (avatarPath && !/^https?:\/\//.test(avatarPath)) {
+        await supabase.storage.from("avatars").remove([avatarPath]);
+      }
+      setAvatarPath("");
+      setAvatarUrl("");
+      await qc.invalidateQueries({ queryKey: ["current-profile"] });
+      toast.success("Profile picture removed");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not remove picture");
+    } finally {
+      setRemoving(false);
+    }
+  }
+
+
   async function changePassword() {
     if (newPassword.length < 8) return toast.error("Password must be at least 8 characters.");
     if (newPassword !== confirmPassword) return toast.error("Passwords do not match.");
@@ -237,12 +260,21 @@ function SettingsPage() {
                 </Avatar>
                 <div>
                   <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={onPickAvatar} />
-                  <Button variant="outline" onClick={() => fileRef.current?.click()} disabled={uploading}>
-                    <Upload className="mr-2 h-4 w-4" />
-                    {uploading ? "Uploading…" : "Upload picture"}
-                  </Button>
+                  <div className="flex flex-wrap gap-2">
+                    <Button variant="outline" onClick={() => fileRef.current?.click()} disabled={uploading || removing}>
+                      <Upload className="mr-2 h-4 w-4" />
+                      {uploading ? "Uploading…" : avatarUrl ? "Change picture" : "Upload picture"}
+                    </Button>
+                    {avatarUrl && (
+                      <Button variant="ghost" onClick={removeAvatar} disabled={uploading || removing}>
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        {removing ? "Removing…" : "Remove"}
+                      </Button>
+                    )}
+                  </div>
                   <p className="mt-1 text-xs text-muted-foreground">PNG or JPG, up to 3 MB.</p>
                 </div>
+
               </div>
 
               <div>
