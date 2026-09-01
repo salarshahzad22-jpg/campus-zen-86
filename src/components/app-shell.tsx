@@ -18,7 +18,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useQueryClient } from "@tanstack/react-query";
-import { useIsAdmin } from "@/hooks/use-profile";
+import { useIsAdmin, useProfile, initialsFrom } from "@/hooks/use-profile";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const NAV = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -39,6 +40,15 @@ export function AppShell({ children }: { children: ReactNode }) {
   const navigate = useNavigate();
   const qc = useQueryClient();
   const { isAdmin } = useIsAdmin();
+  const { data: profile } = useProfile();
+  const avatarNode = (
+    <Avatar className="h-8 w-8">
+      <AvatarImage src={profile?.avatarUrl} alt={profile?.full_name || "Profile picture"} />
+      <AvatarFallback className="text-xs">
+        {initialsFrom(profile?.full_name ?? "", profile?.email ?? "")}
+      </AvatarFallback>
+    </Avatar>
+  );
   const navItems = isAdmin ? [...NAV, ADMIN_NAV] : [...NAV];
 
 
@@ -61,9 +71,12 @@ export function AppShell({ children }: { children: ReactNode }) {
           </span>
           Campus Helper
         </Link>
-        <Button variant="ghost" size="icon" onClick={() => setOpen(!open)}>
-          {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </Button>
+        <div className="flex items-center gap-2">
+          <Link to="/settings" aria-label="Profile settings">{avatarNode}</Link>
+          <Button variant="ghost" size="icon" onClick={() => setOpen(!open)}>
+            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </Button>
+        </div>
       </div>
 
       <div className="flex">
@@ -101,7 +114,20 @@ export function AppShell({ children }: { children: ReactNode }) {
               );
             })}
           </nav>
-          <div className="absolute bottom-0 left-0 right-0 p-3 border-t border-sidebar-border">
+          <div className="absolute bottom-0 left-0 right-0 p-3 border-t border-sidebar-border space-y-1">
+            <Link
+              to="/settings"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+            >
+              {avatarNode}
+              <span className="min-w-0">
+                <span className="block truncate text-sm font-medium">
+                  {profile?.full_name || "Your profile"}
+                </span>
+                <span className="block truncate text-xs opacity-70">{profile?.email}</span>
+              </span>
+            </Link>
             <Button variant="ghost" className="w-full justify-start" onClick={signOut}>
               <LogOut className="mr-2 h-4 w-4" /> Sign out
             </Button>
