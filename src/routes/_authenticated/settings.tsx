@@ -237,12 +237,21 @@ function SettingsPage() {
                 </Avatar>
                 <div>
                   <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={onPickAvatar} />
-                  <Button variant="outline" onClick={() => fileRef.current?.click()} disabled={uploading}>
-                    <Upload className="mr-2 h-4 w-4" />
-                    {uploading ? "Uploading…" : "Upload picture"}
-                  </Button>
+                  <div className="flex flex-wrap gap-2">
+                    <Button variant="outline" onClick={() => fileRef.current?.click()} disabled={uploading || removing}>
+                      <Upload className="mr-2 h-4 w-4" />
+                      {uploading ? "Uploading…" : avatarUrl ? "Change picture" : "Upload picture"}
+                    </Button>
+                    {avatarUrl && (
+                      <Button variant="ghost" onClick={removeAvatar} disabled={uploading || removing}>
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        {removing ? "Removing…" : "Remove"}
+                      </Button>
+                    )}
+                  </div>
                   <p className="mt-1 text-xs text-muted-foreground">PNG or JPG, up to 3 MB.</p>
                 </div>
+
               </div>
 
               <div>
