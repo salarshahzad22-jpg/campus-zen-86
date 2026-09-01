@@ -242,8 +242,9 @@ function AskAI() {
           {sendMut.isPending && (
             <div className="flex gap-3">
               <Avatar role="assistant" />
-              <div className="rounded-2xl rounded-tl-sm bg-muted px-4 py-3">
+              <div className="flex items-center gap-2 rounded-2xl rounded-tl-sm bg-muted px-4 py-3">
                 <TypingDots />
+                <span className="text-xs text-muted-foreground">AI is thinking...</span>
               </div>
             </div>
           )}
