@@ -62,6 +62,8 @@ function SettingsPage() {
   const [avatarPath, setAvatarPath] = useState("");
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [removing, setRemoving] = useState(false);
+
   const [dark, setDark] = useState(false);
   const [notifications, setNotifications] = useState(true);
   const [newPassword, setNewPassword] = useState("");
