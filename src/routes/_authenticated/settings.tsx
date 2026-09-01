@@ -154,6 +154,27 @@ function SettingsPage() {
     }
   }
 
+  async function removeAvatar() {
+    if (!profile) return;
+    setRemoving(true);
+    try {
+      const { error } = await supabase.from("profiles").upsert({ id: profile.id, avatar_url: null });
+      if (error) throw error;
+      if (avatarPath && !/^https?:\/\//.test(avatarPath)) {
+        await supabase.storage.from("avatars").remove([avatarPath]);
+      }
+      setAvatarPath("");
+      setAvatarUrl("");
+      await qc.invalidateQueries({ queryKey: ["current-profile"] });
+      toast.success("Profile picture removed");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not remove picture");
+    } finally {
+      setRemoving(false);
+    }
+  }
+
+
   async function changePassword() {
     if (newPassword.length < 8) return toast.error("Password must be at least 8 characters.");
     if (newPassword !== confirmPassword) return toast.error("Passwords do not match.");
