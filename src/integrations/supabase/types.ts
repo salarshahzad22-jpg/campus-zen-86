@@ -173,6 +173,48 @@ export type Database = {
         }
         Relationships: []
       }
+      events: {
+        Row: {
+          author_id: string
+          category: string
+          created_at: string
+          description: string | null
+          ends_at: string | null
+          id: string
+          location: string | null
+          published: boolean
+          starts_at: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          author_id: string
+          category?: string
+          created_at?: string
+          description?: string | null
+          ends_at?: string | null
+          id?: string
+          location?: string | null
+          published?: boolean
+          starts_at: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          author_id?: string
+          category?: string
+          created_at?: string
+          description?: string | null
+          ends_at?: string | null
+          id?: string
+          location?: string | null
+          published?: boolean
+          starts_at?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       exams: {
         Row: {
           created_at: string
