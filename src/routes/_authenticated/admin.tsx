@@ -29,6 +29,10 @@ import {
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { Users, ClipboardList, BookOpen, MessageSquare, ShieldCheck, Trash2, UserPlus } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { NoticesTab } from "@/components/admin/notices-tab";
+import { EventsTab } from "@/components/admin/events-tab";
+import { AiUsageTab } from "@/components/admin/ai-usage-tab";
 import { useIsAdmin } from "@/hooks/use-profile";
 import { listAdminUsers, setUserRole, deleteUserAsAdmin, getAdminAnalytics } from "@/lib/admin.functions";
 
