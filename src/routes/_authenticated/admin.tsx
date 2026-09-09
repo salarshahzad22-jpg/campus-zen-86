@@ -135,8 +135,17 @@ function AdminPage() {
 
   return (
     <div>
-      <PageHeader title="Admin panel" description="Manage students, roles and platform activity." />
+      <PageHeader title="Admin panel" description="Manage students, notices, events and AI usage." />
 
+      <Tabs defaultValue="users">
+        <TabsList className="mb-4 flex w-full flex-wrap justify-start">
+          <TabsTrigger value="users">Users</TabsTrigger>
+          <TabsTrigger value="notices">Notices</TabsTrigger>
+          <TabsTrigger value="events">Events</TabsTrigger>
+          <TabsTrigger value="ai">AI usage</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="users">
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((s) => (
           <Card key={s.label}>
