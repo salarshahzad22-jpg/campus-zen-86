@@ -29,6 +29,10 @@ import {
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { Users, ClipboardList, BookOpen, MessageSquare, ShieldCheck, Trash2, UserPlus } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { NoticesTab } from "@/components/admin/notices-tab";
+import { EventsTab } from "@/components/admin/events-tab";
+import { AiUsageTab } from "@/components/admin/ai-usage-tab";
 import { useIsAdmin } from "@/hooks/use-profile";
 import { listAdminUsers, setUserRole, deleteUserAsAdmin, getAdminAnalytics } from "@/lib/admin.functions";
 
@@ -131,8 +135,17 @@ function AdminPage() {
 
   return (
     <div>
-      <PageHeader title="Admin panel" description="Manage students, roles and platform activity." />
+      <PageHeader title="Admin panel" description="Manage students, notices, events and AI usage." />
 
+      <Tabs defaultValue="users">
+        <TabsList className="mb-4 flex w-full flex-wrap justify-start">
+          <TabsTrigger value="users">Users</TabsTrigger>
+          <TabsTrigger value="notices">Notices</TabsTrigger>
+          <TabsTrigger value="events">Events</TabsTrigger>
+          <TabsTrigger value="ai">AI usage</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="users">
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((s) => (
           <Card key={s.label}>
@@ -268,6 +281,20 @@ function AdminPage() {
           )}
         </CardContent>
       </Card>
+        </TabsContent>
+
+        <TabsContent value="notices">
+          <NoticesTab />
+        </TabsContent>
+
+        <TabsContent value="events">
+          <EventsTab />
+        </TabsContent>
+
+        <TabsContent value="ai">
+          <AiUsageTab />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
