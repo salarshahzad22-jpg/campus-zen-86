@@ -281,6 +281,20 @@ function AdminPage() {
           )}
         </CardContent>
       </Card>
+        </TabsContent>
+
+        <TabsContent value="notices">
+          <NoticesTab />
+        </TabsContent>
+
+        <TabsContent value="events">
+          <EventsTab />
+        </TabsContent>
+
+        <TabsContent value="ai">
+          <AiUsageTab />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
