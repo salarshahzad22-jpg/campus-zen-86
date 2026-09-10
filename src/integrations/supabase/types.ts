@@ -146,6 +146,39 @@ export type Database = {
         }
         Relationships: []
       }
+      campus_places: {
+        Row: {
+          category: string
+          created_at: string
+          description: string | null
+          id: string
+          latitude: number | null
+          longitude: number | null
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       chat_messages: {
         Row: {
           content: string
@@ -169,6 +202,42 @@ export type Database = {
           id?: string
           is_favorite?: boolean
           role?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      courses: {
+        Row: {
+          created_at: string
+          credits: number
+          grade_label: string | null
+          grade_point: number
+          id: string
+          name: string
+          semester: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          credits?: number
+          grade_label?: string | null
+          grade_point?: number
+          id?: string
+          name: string
+          semester: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          credits?: number
+          grade_label?: string | null
+          grade_point?: number
+          id?: string
+          name?: string
+          semester?: string
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
@@ -251,6 +320,45 @@ export type Database = {
         }
         Relationships: []
       }
+      faculty: {
+        Row: {
+          created_at: string
+          department: string | null
+          email: string | null
+          full_name: string
+          id: string
+          office: string | null
+          office_hours: string | null
+          phone: string | null
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          department?: string | null
+          email?: string | null
+          full_name: string
+          id?: string
+          office?: string | null
+          office_hours?: string | null
+          phone?: string | null
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          department?: string | null
+          email?: string | null
+          full_name?: string
+          id?: string
+          office?: string | null
+          office_hours?: string | null
+          phone?: string | null
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -319,6 +427,45 @@ export type Database = {
           title?: string
           type?: string
           url?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      timetable_entries: {
+        Row: {
+          created_at: string
+          day_of_week: number
+          end_time: string
+          id: string
+          room: string | null
+          start_time: string
+          subject: string
+          teacher: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          day_of_week?: number
+          end_time: string
+          id?: string
+          room?: string | null
+          start_time: string
+          subject: string
+          teacher?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          day_of_week?: number
+          end_time?: string
+          id?: string
+          room?: string | null
+          start_time?: string
+          subject?: string
+          teacher?: string | null
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
