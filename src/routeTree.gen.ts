@@ -13,8 +13,11 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedTimetableRouteImport } from './routes/_authenticated/timetable'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedResourcesRouteImport } from './routes/_authenticated/resources'
+import { Route as AuthenticatedGpaRouteImport } from './routes/_authenticated/gpa'
+import { Route as AuthenticatedFacultyRouteImport } from './routes/_authenticated/faculty'
 import { Route as AuthenticatedExamsRouteImport } from './routes/_authenticated/exams'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedAttendanceRouteImport } from './routes/_authenticated/attendance'
@@ -42,6 +45,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedTimetableRoute = AuthenticatedTimetableRouteImport.update({
+  id: '/timetable',
+  path: '/timetable',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -50,6 +58,16 @@ const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
 const AuthenticatedResourcesRoute = AuthenticatedResourcesRouteImport.update({
   id: '/resources',
   path: '/resources',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedGpaRoute = AuthenticatedGpaRouteImport.update({
+  id: '/gpa',
+  path: '/gpa',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedFacultyRoute = AuthenticatedFacultyRouteImport.update({
+  id: '/faculty',
+  path: '/faculty',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedExamsRoute = AuthenticatedExamsRouteImport.update({
@@ -101,8 +119,11 @@ export interface FileRoutesByFullPath {
   '/attendance': typeof AuthenticatedAttendanceRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/exams': typeof AuthenticatedExamsRoute
+  '/faculty': typeof AuthenticatedFacultyRoute
+  '/gpa': typeof AuthenticatedGpaRoute
   '/resources': typeof AuthenticatedResourcesRoute
   '/settings': typeof AuthenticatedSettingsRoute
+  '/timetable': typeof AuthenticatedTimetableRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -115,8 +136,11 @@ export interface FileRoutesByTo {
   '/attendance': typeof AuthenticatedAttendanceRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/exams': typeof AuthenticatedExamsRoute
+  '/faculty': typeof AuthenticatedFacultyRoute
+  '/gpa': typeof AuthenticatedGpaRoute
   '/resources': typeof AuthenticatedResourcesRoute
   '/settings': typeof AuthenticatedSettingsRoute
+  '/timetable': typeof AuthenticatedTimetableRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -131,8 +155,11 @@ export interface FileRoutesById {
   '/_authenticated/attendance': typeof AuthenticatedAttendanceRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/exams': typeof AuthenticatedExamsRoute
+  '/_authenticated/faculty': typeof AuthenticatedFacultyRoute
+  '/_authenticated/gpa': typeof AuthenticatedGpaRoute
   '/_authenticated/resources': typeof AuthenticatedResourcesRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
+  '/_authenticated/timetable': typeof AuthenticatedTimetableRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -147,8 +174,11 @@ export interface FileRouteTypes {
     | '/attendance'
     | '/dashboard'
     | '/exams'
+    | '/faculty'
+    | '/gpa'
     | '/resources'
     | '/settings'
+    | '/timetable'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -161,8 +191,11 @@ export interface FileRouteTypes {
     | '/attendance'
     | '/dashboard'
     | '/exams'
+    | '/faculty'
+    | '/gpa'
     | '/resources'
     | '/settings'
+    | '/timetable'
   id:
     | '__root__'
     | '/'
@@ -176,8 +209,11 @@ export interface FileRouteTypes {
     | '/_authenticated/attendance'
     | '/_authenticated/dashboard'
     | '/_authenticated/exams'
+    | '/_authenticated/faculty'
+    | '/_authenticated/gpa'
     | '/_authenticated/resources'
     | '/_authenticated/settings'
+    | '/_authenticated/timetable'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -217,6 +253,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/timetable': {
+      id: '/_authenticated/timetable'
+      path: '/timetable'
+      fullPath: '/timetable'
+      preLoaderRoute: typeof AuthenticatedTimetableRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/settings': {
       id: '/_authenticated/settings'
       path: '/settings'
@@ -229,6 +272,20 @@ declare module '@tanstack/react-router' {
       path: '/resources'
       fullPath: '/resources'
       preLoaderRoute: typeof AuthenticatedResourcesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/gpa': {
+      id: '/_authenticated/gpa'
+      path: '/gpa'
+      fullPath: '/gpa'
+      preLoaderRoute: typeof AuthenticatedGpaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/faculty': {
+      id: '/_authenticated/faculty'
+      path: '/faculty'
+      fullPath: '/faculty'
+      preLoaderRoute: typeof AuthenticatedFacultyRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/exams': {
@@ -291,8 +348,11 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAttendanceRoute: typeof AuthenticatedAttendanceRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedExamsRoute: typeof AuthenticatedExamsRoute
+  AuthenticatedFacultyRoute: typeof AuthenticatedFacultyRoute
+  AuthenticatedGpaRoute: typeof AuthenticatedGpaRoute
   AuthenticatedResourcesRoute: typeof AuthenticatedResourcesRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
+  AuthenticatedTimetableRoute: typeof AuthenticatedTimetableRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -303,8 +363,11 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAttendanceRoute: AuthenticatedAttendanceRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedExamsRoute: AuthenticatedExamsRoute,
+  AuthenticatedFacultyRoute: AuthenticatedFacultyRoute,
+  AuthenticatedGpaRoute: AuthenticatedGpaRoute,
   AuthenticatedResourcesRoute: AuthenticatedResourcesRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
+  AuthenticatedTimetableRoute: AuthenticatedTimetableRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
