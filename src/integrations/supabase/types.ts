@@ -206,6 +206,45 @@ export type Database = {
         }
         Relationships: []
       }
+      class_assignments: {
+        Row: {
+          author_id: string
+          created_at: string
+          description: string | null
+          due_date: string | null
+          id: string
+          max_marks: number
+          published: boolean
+          subject: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          author_id: string
+          created_at?: string
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          max_marks?: number
+          published?: boolean
+          subject: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          author_id?: string
+          created_at?: string
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          max_marks?: number
+          published?: boolean
+          subject?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       courses: {
         Row: {
           created_at: string
@@ -430,6 +469,84 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      submissions: {
+        Row: {
+          assignment_id: string | null
+          class_assignment_id: string | null
+          content: string | null
+          created_at: string
+          feedback: string | null
+          file_name: string | null
+          file_path: string | null
+          id: string
+          link_url: string | null
+          marks: number | null
+          max_marks: number
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          subject: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          assignment_id?: string | null
+          class_assignment_id?: string | null
+          content?: string | null
+          created_at?: string
+          feedback?: string | null
+          file_name?: string | null
+          file_path?: string | null
+          id?: string
+          link_url?: string | null
+          marks?: number | null
+          max_marks?: number
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          subject: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          assignment_id?: string | null
+          class_assignment_id?: string | null
+          content?: string | null
+          created_at?: string
+          feedback?: string | null
+          file_name?: string | null
+          file_path?: string | null
+          id?: string
+          link_url?: string | null
+          marks?: number | null
+          max_marks?: number
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          subject?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "submissions_assignment_id_fkey"
+            columns: ["assignment_id"]
+            isOneToOne: false
+            referencedRelation: "assignments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "submissions_class_assignment_id_fkey"
+            columns: ["class_assignment_id"]
+            isOneToOne: false
+            referencedRelation: "class_assignments"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       timetable_entries: {
         Row: {
