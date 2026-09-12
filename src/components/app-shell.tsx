@@ -102,7 +102,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             </span>
             Campus Helper AI
           </div>
-          <nav className="p-3 space-y-1 mt-2 lg:mt-0">
+          <nav className="p-3 space-y-1 mt-2 lg:mt-0 max-h-[calc(100vh-9rem)] overflow-y-auto pb-24">
             {navItems.map((item) => {
               const active = currentPath.startsWith(item.to);
               return (
