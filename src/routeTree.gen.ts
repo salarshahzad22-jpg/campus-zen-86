@@ -20,6 +20,7 @@ import { Route as AuthenticatedGpaRouteImport } from './routes/_authenticated/gp
 import { Route as AuthenticatedFacultyRouteImport } from './routes/_authenticated/faculty'
 import { Route as AuthenticatedExamsRouteImport } from './routes/_authenticated/exams'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedCampusMapRouteImport } from './routes/_authenticated/campus-map'
 import { Route as AuthenticatedAttendanceRouteImport } from './routes/_authenticated/attendance'
 import { Route as AuthenticatedAssignmentsRouteImport } from './routes/_authenticated/assignments'
 import { Route as AuthenticatedAskAiRouteImport } from './routes/_authenticated/ask-ai'
@@ -80,6 +81,11 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedCampusMapRoute = AuthenticatedCampusMapRouteImport.update({
+  id: '/campus-map',
+  path: '/campus-map',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedAttendanceRoute = AuthenticatedAttendanceRouteImport.update({
   id: '/attendance',
   path: '/attendance',
@@ -117,6 +123,7 @@ export interface FileRoutesByFullPath {
   '/ask-ai': typeof AuthenticatedAskAiRoute
   '/assignments': typeof AuthenticatedAssignmentsRoute
   '/attendance': typeof AuthenticatedAttendanceRoute
+  '/campus-map': typeof AuthenticatedCampusMapRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/exams': typeof AuthenticatedExamsRoute
   '/faculty': typeof AuthenticatedFacultyRoute
@@ -134,6 +141,7 @@ export interface FileRoutesByTo {
   '/ask-ai': typeof AuthenticatedAskAiRoute
   '/assignments': typeof AuthenticatedAssignmentsRoute
   '/attendance': typeof AuthenticatedAttendanceRoute
+  '/campus-map': typeof AuthenticatedCampusMapRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/exams': typeof AuthenticatedExamsRoute
   '/faculty': typeof AuthenticatedFacultyRoute
@@ -153,6 +161,7 @@ export interface FileRoutesById {
   '/_authenticated/ask-ai': typeof AuthenticatedAskAiRoute
   '/_authenticated/assignments': typeof AuthenticatedAssignmentsRoute
   '/_authenticated/attendance': typeof AuthenticatedAttendanceRoute
+  '/_authenticated/campus-map': typeof AuthenticatedCampusMapRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/exams': typeof AuthenticatedExamsRoute
   '/_authenticated/faculty': typeof AuthenticatedFacultyRoute
@@ -172,6 +181,7 @@ export interface FileRouteTypes {
     | '/ask-ai'
     | '/assignments'
     | '/attendance'
+    | '/campus-map'
     | '/dashboard'
     | '/exams'
     | '/faculty'
@@ -189,6 +199,7 @@ export interface FileRouteTypes {
     | '/ask-ai'
     | '/assignments'
     | '/attendance'
+    | '/campus-map'
     | '/dashboard'
     | '/exams'
     | '/faculty'
@@ -207,6 +218,7 @@ export interface FileRouteTypes {
     | '/_authenticated/ask-ai'
     | '/_authenticated/assignments'
     | '/_authenticated/attendance'
+    | '/_authenticated/campus-map'
     | '/_authenticated/dashboard'
     | '/_authenticated/exams'
     | '/_authenticated/faculty'
@@ -302,6 +314,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/campus-map': {
+      id: '/_authenticated/campus-map'
+      path: '/campus-map'
+      fullPath: '/campus-map'
+      preLoaderRoute: typeof AuthenticatedCampusMapRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/attendance': {
       id: '/_authenticated/attendance'
       path: '/attendance'
@@ -346,6 +365,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAskAiRoute: typeof AuthenticatedAskAiRoute
   AuthenticatedAssignmentsRoute: typeof AuthenticatedAssignmentsRoute
   AuthenticatedAttendanceRoute: typeof AuthenticatedAttendanceRoute
+  AuthenticatedCampusMapRoute: typeof AuthenticatedCampusMapRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedExamsRoute: typeof AuthenticatedExamsRoute
   AuthenticatedFacultyRoute: typeof AuthenticatedFacultyRoute
@@ -361,6 +381,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAskAiRoute: AuthenticatedAskAiRoute,
   AuthenticatedAssignmentsRoute: AuthenticatedAssignmentsRoute,
   AuthenticatedAttendanceRoute: AuthenticatedAttendanceRoute,
+  AuthenticatedCampusMapRoute: AuthenticatedCampusMapRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedExamsRoute: AuthenticatedExamsRoute,
   AuthenticatedFacultyRoute: AuthenticatedFacultyRoute,
