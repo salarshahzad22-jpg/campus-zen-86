@@ -5,13 +5,17 @@ import {
   BookOpen,
   Brain,
   CalendarCheck,
+  CalendarDays,
+  Calculator,
   ClipboardList,
   GraduationCap,
   LayoutDashboard,
   LogOut,
+  Map as MapIcon,
   Menu,
   Settings as SettingsIcon,
   ShieldCheck,
+  Users,
   X,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -26,11 +30,16 @@ const NAV = [
   { to: "/assignments", label: "Assignments", icon: ClipboardList },
   { to: "/attendance", label: "Attendance", icon: CalendarCheck },
   { to: "/exams", label: "Exams", icon: GraduationCap },
+  { to: "/timetable", label: "Timetable", icon: CalendarDays },
+  { to: "/gpa", label: "GPA Calculator", icon: Calculator },
+  { to: "/faculty", label: "Faculty", icon: Users },
+  { to: "/campus-map", label: "Campus Map", icon: MapIcon },
   { to: "/resources", label: "Resources", icon: BookOpen },
   { to: "/ask-ai", label: "Ask Campus AI", icon: Bot },
   { to: "/ai-assistant", label: "Study Planner", icon: Brain },
   { to: "/settings", label: "Settings", icon: SettingsIcon },
 ] as const;
+
 
 const ADMIN_NAV = { to: "/admin", label: "Admin panel", icon: ShieldCheck } as const;
 
@@ -93,7 +102,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             </span>
             Campus Helper AI
           </div>
-          <nav className="p-3 space-y-1 mt-2 lg:mt-0">
+          <nav className="p-3 space-y-1 mt-2 lg:mt-0 max-h-[calc(100vh-9rem)] overflow-y-auto pb-24">
             {navItems.map((item) => {
               const active = currentPath.startsWith(item.to);
               return (
