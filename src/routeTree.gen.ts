@@ -26,6 +26,7 @@ import { Route as AuthenticatedAssignmentsRouteImport } from './routes/_authenti
 import { Route as AuthenticatedAskAiRouteImport } from './routes/_authenticated/ask-ai'
 import { Route as AuthenticatedAiAssistantRouteImport } from './routes/_authenticated/ai-assistant'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as ApiPublicManifestRouteImport } from './routes/api/public/manifest'
 
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
@@ -113,6 +114,11 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const ApiPublicManifestRoute = ApiPublicManifestRouteImport.update({
+  id: '/api/public/manifest',
+  path: '/api/public/manifest',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -131,6 +137,7 @@ export interface FileRoutesByFullPath {
   '/resources': typeof AuthenticatedResourcesRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/timetable': typeof AuthenticatedTimetableRoute
+  '/api/public/manifest': typeof ApiPublicManifestRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -149,6 +156,7 @@ export interface FileRoutesByTo {
   '/resources': typeof AuthenticatedResourcesRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/timetable': typeof AuthenticatedTimetableRoute
+  '/api/public/manifest': typeof ApiPublicManifestRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -169,6 +177,7 @@ export interface FileRoutesById {
   '/_authenticated/resources': typeof AuthenticatedResourcesRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/timetable': typeof AuthenticatedTimetableRoute
+  '/api/public/manifest': typeof ApiPublicManifestRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -189,6 +198,7 @@ export interface FileRouteTypes {
     | '/resources'
     | '/settings'
     | '/timetable'
+    | '/api/public/manifest'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -207,6 +217,7 @@ export interface FileRouteTypes {
     | '/resources'
     | '/settings'
     | '/timetable'
+    | '/api/public/manifest'
   id:
     | '__root__'
     | '/'
@@ -226,6 +237,7 @@ export interface FileRouteTypes {
     | '/_authenticated/resources'
     | '/_authenticated/settings'
     | '/_authenticated/timetable'
+    | '/api/public/manifest'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -233,6 +245,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  ApiPublicManifestRoute: typeof ApiPublicManifestRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -356,6 +369,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/api/public/manifest': {
+      id: '/api/public/manifest'
+      path: '/api/public/manifest'
+      fullPath: '/api/public/manifest'
+      preLoaderRoute: typeof ApiPublicManifestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -399,6 +419,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  ApiPublicManifestRoute: ApiPublicManifestRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
