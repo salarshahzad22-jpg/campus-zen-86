@@ -33,6 +33,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { NoticesTab } from "@/components/admin/notices-tab";
 import { EventsTab } from "@/components/admin/events-tab";
 import { AiUsageTab } from "@/components/admin/ai-usage-tab";
+import { ClassAssignmentsTab } from "@/components/admin/class-assignments-tab";
+import { SubmissionsTab } from "@/components/admin/submissions-tab";
 import { useIsAdmin } from "@/hooks/use-profile";
 import { listAdminUsers, setUserRole, deleteUserAsAdmin, getAdminAnalytics } from "@/lib/admin.functions";
 
@@ -142,6 +144,8 @@ function AdminPage() {
           <TabsTrigger value="users">Users</TabsTrigger>
           <TabsTrigger value="notices">Notices</TabsTrigger>
           <TabsTrigger value="events">Events</TabsTrigger>
+          <TabsTrigger value="class-assignments">Class work</TabsTrigger>
+          <TabsTrigger value="submissions">Submissions</TabsTrigger>
           <TabsTrigger value="ai">AI usage</TabsTrigger>
         </TabsList>
 
@@ -289,6 +293,14 @@ function AdminPage() {
 
         <TabsContent value="events">
           <EventsTab />
+        </TabsContent>
+
+        <TabsContent value="class-assignments">
+          <ClassAssignmentsTab />
+        </TabsContent>
+
+        <TabsContent value="submissions">
+          <SubmissionsTab />
         </TabsContent>
 
         <TabsContent value="ai">
