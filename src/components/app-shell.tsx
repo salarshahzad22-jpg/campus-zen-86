@@ -8,6 +8,7 @@ import {
   CalendarDays,
   Calculator,
   ClipboardList,
+  FileCheck,
   GraduationCap,
   LayoutDashboard,
   LogOut,
@@ -28,6 +29,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 const NAV = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { to: "/assignments", label: "Assignments", icon: ClipboardList },
+  { to: "/portal", label: "Student Portal", icon: FileCheck },
   { to: "/attendance", label: "Attendance", icon: CalendarCheck },
   { to: "/exams", label: "Exams", icon: GraduationCap },
   { to: "/timetable", label: "Timetable", icon: CalendarDays },
